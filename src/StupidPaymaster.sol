@@ -45,7 +45,7 @@ contract StupidPaymaster is Ownable {
         virtual
         returns (bytes memory context, uint256 validationData)
     {
-        return ("123", _packValidationData({sigFailed: false, validUntil: 123, validAfter: 9999999}));
+        return ("123", _packValidationData({sigFailed: false, validUntil: 0, validAfter: 9999999}));
     }
 
     function _packValidationData(bool sigFailed, uint48 validUntil, uint48 validAfter) public pure returns (uint256) {

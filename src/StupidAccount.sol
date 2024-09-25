@@ -13,6 +13,7 @@ contract StupidAccount {
 
     function buildStupidUserOp(address paymaster)
         external
+        view
         virtual
         returns (PackedUserOperation memory packedUserOperation)
     {
