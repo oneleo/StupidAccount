@@ -4,6 +4,11 @@ pragma solidity ^0.8.23;
 import {IEntryPoint} from "@aa/interfaces/IEntryPoint.sol";
 import {PackedUserOperation} from "@aa/interfaces/PackedUserOperation.sol";
 
+enum PaymasterMode {
+    Sponsor,
+    ChargeInPostOp
+}
+
 contract StupidAccount {
     IEntryPoint public immutable entryPoint;
 
@@ -11,7 +16,7 @@ contract StupidAccount {
         entryPoint = anEntryPoint;
     }
 
-    function buildStupidUserOp(address paymaster)
+    function buildStupidUserOp(address paymaster, PaymasterMode paymasterMode)
         external
         view
         virtual
@@ -20,8 +25,20 @@ contract StupidAccount {
         address sender = address(this);
         uint256 DEFAULT_VERIFICATION_GAS = 1000000; // 1M gas
         uint256 DEFAULT_EXECUTION_GAS = 1500000; // 1.5M gas
+
         bytes16 paymasterVerificationGasLimit = bytes16(abi.encodePacked(uint128(500000)));
         bytes16 paymasterPostOpGasLimit = bytes16(abi.encodePacked(uint128(500000)));
+
+        uint48 validAfter = uint48(123);
+        uint48 validUntil = uint48(456);
+        uint256 maxCostAllowed = (1 ether * 105) / 100;
+
+        bytes memory modeAndValidityData = abi.encodePacked(paymasterMode, validAfter, validUntil, maxCostAllowed);
+
+        bytes memory paymasterAndData = abi.encodePacked(
+            paymaster, // Paymaster address
+            bytes.concat(paymasterVerificationGasLimit, paymasterPostOpGasLimit, modeAndValidityData)
+        );
 
         return PackedUserOperation({
             sender: sender,
@@ -31,9 +48,7 @@ contract StupidAccount {
             accountGasLimits: bytes32(abi.encodePacked(uint128(DEFAULT_VERIFICATION_GAS), uint128(DEFAULT_EXECUTION_GAS))),
             preVerificationGas: 0,
             gasFees: bytes32(abi.encodePacked(uint128(1), uint128(1))),
-            paymasterAndData: abi.encodePacked(
-                paymaster, bytes.concat(paymasterVerificationGasLimit, paymasterPostOpGasLimit, "")
-            ),
+            paymasterAndData: paymasterAndData,
             signature: bytes("")
         });
     }

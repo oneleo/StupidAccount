@@ -1,6 +1,6 @@
 {
   "Base_Sepolia": {
-    "stupidAccount": "0x0Ad74C6B91a72186c54Bc5B85Db62Be4B50f06A0",
-    "stupidPaymaster": "0x71Be8134F4d04c4dfC1ed3271D671ECB1Db3AF34"
+    "stupidAccount": "0xe00147b07c7c224Ef9358a5512c522ffB853014b",
+    "stupidPaymaster": "0x81d7a78C455730d0cdEcD5123793C9596ABBf53a"
   }
 }

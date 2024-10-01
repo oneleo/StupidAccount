@@ -6,7 +6,7 @@ import {Test, console} from "forge-std/Test.sol";
 import {IEntryPoint} from "@aa/interfaces/IEntryPoint.sol";
 import {PackedUserOperation} from "@aa/interfaces/PackedUserOperation.sol";
 
-import {StupidAccount} from "src/StupidAccount.sol";
+import {StupidAccount, PaymasterMode} from "src/StupidAccount.sol";
 import {StupidPaymaster} from "src/StupidPaymaster.sol";
 
 contract ForkTest is Test {
@@ -55,7 +55,8 @@ contract ForkTest is Test {
         StupidAccount stupidAccount = new StupidAccount(entrypoint);
 
         PackedUserOperation[] memory packedUserOperations = new PackedUserOperation[](1);
-        packedUserOperations[0] = stupidAccount.buildStupidUserOp(address(stupidPaymaster));
+        packedUserOperations[0] =
+            stupidAccount.buildStupidUserOp(address(stupidPaymaster), PaymasterMode.ChargeInPostOp);
 
         vm.startPrank(bundler);
         entrypoint.handleOps(packedUserOperations, payable(bundler));
