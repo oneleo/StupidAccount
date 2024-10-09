@@ -58,17 +58,19 @@ contract ForkTest is Test {
         packedUserOperations[0] =
             stupidAccount.buildStupidUserOp(address(stupidPaymaster), PaymasterMode.ChargeInPostOp);
 
-        vm.expectEmit(false, true, true, false, address(stupidPaymaster));
+        bytes32 userOpHash = entrypoint.getUserOpHash(packedUserOperations[0]);
+
+        vm.expectEmit(true, true, true, true, address(stupidPaymaster));
         emit StupidPaymaster.UserOpProcessed(
-            bytes32(uint256(999)), // Unknown userOpHash
+            userOpHash,
             address(stupidAccount),
             bytes32(uint256(1)),
             PaymasterMode.ChargeInPostOp,
-            999, // Unknown actualGasCost
+            39136, // actualGasCost for validatePaymasterUserOp() on block 15,555,555
             address(1),
             1,
             address(1),
-            false
+            true
         );
 
         vm.startPrank(bundler);
@@ -81,13 +83,15 @@ contract ForkTest is Test {
 
         packedUserOperations[0] = stupidAccount.buildStupidUserOp(address(stupidPaymaster), PaymasterMode.Sponsor);
 
-        vm.expectEmit(false, true, true, false, address(stupidPaymaster));
+        bytes32 userOpHash = entrypoint.getUserOpHash(packedUserOperations[0]);
+
+        vm.expectEmit(true, true, true, true, address(stupidPaymaster));
         emit StupidPaymaster.UserOpProcessed(
-            bytes32(uint256(999)), // Unknown userOpHash
+            userOpHash,
             address(stupidAccount),
             bytes32(uint256(0)),
-            PaymasterMode.ChargeInPostOp,
-            999, // Unknown actualGasCost
+            PaymasterMode.Sponsor,
+            39136, // actualGasCost for validatePaymasterUserOp() on block 15,555,555
             address(0),
             0,
             address(0),
