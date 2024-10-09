@@ -40,6 +40,9 @@ jobs:
         id: build
 
       - name: Run Forge tests
+        env:
+          BASE_SEPOLIA_NODE_RPC_URL: ${{ secrets.BASE_SEPOLIA_NODE_RPC_URL }}
+          ENTRYPOINT_ADDRESS: ${{ vars.ENTRYPOINT_ADDRESS }}
         run: |
           forge test -vvv
         id: test
