@@ -3,11 +3,7 @@ pragma solidity ^0.8.23;
 
 import {IEntryPoint} from "@aa/interfaces/IEntryPoint.sol";
 import {PackedUserOperation} from "@aa/interfaces/PackedUserOperation.sol";
-
-enum PaymasterMode {
-    Sponsor,
-    ChargeInPostOp
-}
+import {PaymasterMode} from "src/StupidPaymaster.sol";
 
 contract StupidAccount {
     IEntryPoint public immutable entryPoint;
@@ -53,11 +49,11 @@ contract StupidAccount {
         });
     }
 
-    function validateUserOp(PackedUserOperation calldata userOp, bytes32 userOpHash, uint256 missingAccountFunds)
-        external
-        virtual
-        returns (uint256 validationData)
-    {
+    function validateUserOp(
+        PackedUserOperation calldata, /* userOp */
+        bytes32, /* userOpHash */
+        uint256 missingAccountFunds
+    ) external virtual returns (uint256 validationData) {
         _requireFromEntryPoint();
         _payPrefund(missingAccountFunds);
         return 0;
