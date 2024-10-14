@@ -54,6 +54,26 @@ contract StupidPaymaster is Ownable {
         shouldPostOpFail = _shouldPostOpFail;
     }
 
+    function deposit() public payable {
+        entryPoint.depositTo{value: msg.value}(address(this));
+    }
+
+    function withdrawTo(address payable withdrawAddress, uint256 amount) public onlyOwner {
+        entryPoint.withdrawTo(withdrawAddress, amount);
+    }
+
+    function addStake(uint32 unstakeDelaySec) external payable onlyOwner {
+        entryPoint.addStake{value: msg.value}(unstakeDelaySec);
+    }
+
+    function unlockStake() external onlyOwner {
+        entryPoint.unlockStake();
+    }
+
+    function withdrawStake(address payable withdrawAddress) external onlyOwner {
+        entryPoint.withdrawStake(withdrawAddress);
+    }
+
     function validatePaymasterUserOp(PackedUserOperation calldata userOp, bytes32 userOpHash, uint256 maxCost)
         external
         returns (bytes memory context, uint256 validationData)
