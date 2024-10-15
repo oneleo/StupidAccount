@@ -156,9 +156,6 @@ contract StupidPaymaster is Ownable {
                 chargeSuccessful
             );
         }
-        if (shouldPostOpFail) {
-            revert("PostOp failed");
-        }
     }
 
     /**
