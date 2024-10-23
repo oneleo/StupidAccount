@@ -66,7 +66,7 @@ contract ForkTest is Test {
             address(stupidAccount),
             bytes32(uint256(1)),
             PaymasterMode.ChargeInPostOp,
-            39136, // actualGasCost for validatePaymasterUserOp() on block 15,555,555
+            39114, // actualGasCost for validatePaymasterUserOp() on block 15,555,555
             address(1),
             1,
             address(1),
@@ -91,7 +91,7 @@ contract ForkTest is Test {
             address(stupidAccount),
             bytes32(uint256(0)),
             PaymasterMode.Sponsor,
-            39136, // actualGasCost for validatePaymasterUserOp() on block 15,555,555
+            39114, // actualGasCost for validatePaymasterUserOp() on block 15,555,555
             address(0),
             0,
             address(0),

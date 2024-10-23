@@ -18,6 +18,7 @@ uint256 constant PAYMASTER_MAX_COST_ALLOWED_OFFSET = PAYMASTER_VALID_UNTIL_OFFSE
 contract StupidPaymaster is Ownable {
     IEntryPoint public immutable entryPoint;
     bool public shouldPostOpFail;
+    bool public shouldChargeRevert;
 
     enum PostOpMode {
         // User op succeeded.
@@ -46,12 +47,18 @@ contract StupidPaymaster is Ownable {
         bool chargeSuccessful
     );
 
+    error CanNotChargeFrom();
+
     constructor(IEntryPoint _entryPoint) Ownable(msg.sender) {
         entryPoint = _entryPoint;
     }
 
     function setShouldPostOpFail(bool _shouldPostOpFail) external onlyOwner {
         shouldPostOpFail = _shouldPostOpFail;
+    }
+
+    function setShouldChargeRevert(bool _shouldChargeRevert) external onlyOwner {
+        shouldChargeRevert = _shouldChargeRevert;
     }
 
     function deposit() public payable {
@@ -155,6 +162,10 @@ contract StupidPaymaster is Ownable {
                 address(1),
                 chargeSuccessful
             );
+
+            if (shouldChargeRevert) {
+                revert CanNotChargeFrom();
+            }
         }
     }
 
